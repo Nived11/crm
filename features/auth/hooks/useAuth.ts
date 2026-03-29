@@ -32,15 +32,22 @@ export const useAuth = () => {
       setLoading(false);
       return;
     }
+
+    // ✅ router.replace upayogikkunnu (Back button issue fix cheyyaan)
+    router.replace("/admin");
     router.refresh();
-    router.push("/admin");
   };
 
   const handleGoogleLogin = async () => {
     setLoading(true);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { 
+        redirectTo: `${window.location.origin}/auth/callback`,
+        queryParams: {
+          prompt: 'select_account',
+        },
+      },
     });
     if (error) {
       setAuthError(error.message);

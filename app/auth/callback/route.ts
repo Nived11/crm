@@ -1,3 +1,4 @@
+// app/auth/callback/route.ts
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
@@ -31,7 +32,7 @@ export async function GET(request: Request) {
     
     if (!error) {
       console.log("Login Success! Redirecting to admin...");
-      return NextResponse.redirect(`${origin}/admin`)
+      return NextResponse.redirect(`${origin}/admin`, { status: 303 })
     }
     
     console.error("Supabase Auth Error:", error.message);
