@@ -12,18 +12,6 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-8">
-      {/* Header Section */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tighter dark:text-white">Dashboard Overview</h1>
-          <p className="text-gray-500 text-sm mt-1 font-medium">Welcome back, Nived! Ivide ninte agency-ude growth kaanam.</p>
-        </div>
-        <button className="bg-[#259566] text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-[#259566]/20 flex items-center gap-2">
-          Add New Project <ArrowUpRight size={16} />
-        </button>
-      </div>
-
-      {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {stats.map((stat, i) => (
           <motion.div 
