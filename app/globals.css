@@ -22,6 +22,19 @@
   --brand: #2ecc71; 
 }
 
+/* app/globals.css */
+
+@layer components {
+  .cn-toast {
+    background-color: #0a0a0a !important; 
+    color: #ffffff !important;
+    border: 1px solid #18181b !important; 
+    border-radius: 12px !important;
+    font-family: inherit;
+    font-size: 14px !important;
+  }
+}
+
 body {
   background-color: var(--background);
   color: var(--foreground);

@@ -8,7 +8,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       attribute="class" 
       defaultTheme="light" 
       enableSystem={false}
-      storageKey="viceversa-theme" // ഇത് പുതിയൊരു കീ നൽകുന്നു
+      storageKey="viceversa-theme" 
     >
       {children}
     </NextThemesProvider>

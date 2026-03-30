@@ -1,3 +1,4 @@
+// lib/middlewares/authMiddleware.ts
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
@@ -24,13 +25,16 @@ export async function authMiddleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
+  response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  response.headers.set('Pragma', 'no-cache');
+  response.headers.set('Expires', '0');
+
   // 1. Admin Protection
   if (pathname.startsWith('/admin')) {
     if (!user) {
       return NextResponse.redirect(new URL('/login', request.url));
     }
 
-    // 🛑 Loop Fix: Admin email mismatch aanengil sign-out trigger cheyyaan error viduka
     if (user.email !== ADMIN_EMAIL) {
       const url = new URL('/login', request.url);
       url.searchParams.set('error', 'unauthorized');
@@ -40,11 +44,9 @@ export async function authMiddleware(request: NextRequest) {
 
   // 2. Login Page Protection
   if (pathname === '/login' && user) {
-    // Admin user aanengil dashboard-lekk viduka
     if (user.email === ADMIN_EMAIL) {
       return NextResponse.redirect(new URL('/admin', request.url));
     }
-    // Admin allatha user login-il vannal avide thanne nilkkan allow cheyyuka (Error message kaanikkan)
   }
 
   return response;

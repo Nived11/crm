@@ -1,6 +1,7 @@
 // features/auth/hooks/useAuth.ts
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export const useAuth = () => {
@@ -33,7 +34,7 @@ export const useAuth = () => {
       return;
     }
 
-    // ✅ router.replace upayogikkunnu (Back button issue fix cheyyaan)
+  toast.success("Welcome Back Admin!"); 
     router.replace("/admin");
     router.refresh();
   };
