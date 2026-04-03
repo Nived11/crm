@@ -10,10 +10,6 @@ export const useLogout = () => {
   const logout = async () => {
     try {
       await api.post("/auth/logout/"); 
-      
-      
-      
-      
       setTimeout(() => {
         clearSession();
         navigate("/login", { replace: true }); 

@@ -17,27 +17,45 @@ export function useLogin() {
     e.preventDefault();
     setLoading(true);
     setAuthError(null);
-    
     try {
       const response = await api.post('/auth/login/', { email, password });
-
       if (response.status === 200) {
         login(response.data.user); 
-        toast.success(`Successfully logged in !`);
+        toast.success(`Successfully logged in!`);
         navigate('/admin', { replace: true });
       }
     } catch (error: any) {
-      console.error("Login Error:", error);
-      setAuthError(error.response?.data?.error || "Invalid email or password. Please try again.");
+      setAuthError(error.response?.data?.error || "Invalid credentials.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+const handleGoogleLoginSuccess = async (credentialResponse: any) => {
+    setLoading(true);
+    try {
+      const idToken = credentialResponse.credential;
+
+      const response = await api.post('/auth/google/', { 
+        token: idToken 
+      });
+
+      if (response.status === 200) {
+        login(response.data.user); 
+        toast.success("Successfully logged in!");
+        navigate('/admin', { replace: true });
+      }
+    } catch (error: any) {
+      console.error("Backend Error:", error.response?.data);
+      setAuthError(error.response?.data?.error || "Google verification failed");
     } finally {
       setLoading(false);
     }
   };
 
   return {
-    email, setEmail,
-    password, setPassword,
-    loading, authError,
-    handleEmailLogin
+    email, setEmail, password, setPassword,
+    loading, authError, handleEmailLogin,
+    handleGoogleLoginSuccess
   };
 }
