@@ -21,14 +21,12 @@ import AdminMessagesPage from '@/pages/admin/AdminMessagesPage';
 import AdminSettingsPage from '@/pages/admin/AdminSettingsPage';
 
 export default function AppRouter() {
-  // Use Zustand auth state natively
   const isAuthenticated = useAuthStore(state => state.isAuthenticated);
 
   return (
     <Routes>
       {/* Client Application Routes */}
       <Route path="/" element={<ClientLayout />}>
-        {/* We slot the HomePage right into the root index route */}
         <Route index element={<HomePage />} /> 
         <Route path="about" element={<AboutPage />} />
         <Route path="services" element={<ServicesPage />} />
@@ -52,7 +50,6 @@ export default function AppRouter() {
         <Route path="settings" element={<AdminSettingsPage />} />
       </Route>
       
-      {/* Catch-all */}
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

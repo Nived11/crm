@@ -1,8 +1,10 @@
 import { FcGoogle } from "react-icons/fc";
+import { useState } from "react";
 import { useLogin } from "@/features/auth/hooks/useLogin";
-import { ShieldCheck, ArrowRight } from "lucide-react";
+import { ShieldCheck, ArrowRight, Wifi, WifiOff } from "lucide-react";
 
 export function LoginForm() {
+  const [showPassword, setShowPassword] = useState(false);
   const {
     email, setEmail, password, setPassword,
     loading, authError, handleEmailLogin
@@ -15,20 +17,20 @@ export function LoginForm() {
 
   return (
     <div className="flex w-full min-h-screen bg-black overflow-hidden selection:bg-brand selection:text-white">
-      
+
       {/* LEFT SIDE: Branding - Hidden on Mobile */}
       <div className="hidden lg:flex lg:w-[50%] p-16 flex-col justify-between bg-[#0a0a0a] border-r border-zinc-900 relative">
         <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#259566_1px,transparent_1px)] [background-size:32px_32px]"></div>
-        
+
         <div className="flex items-center gap-2 relative z-10">
-          <img 
-            src="/viceversalogo.png" 
-            alt="Logo" 
+          <img
+            src="/viceversalogo.png"
+            alt="Logo"
             className="w-10 h-10 object-contain drop-shadow-md"
           />
           <span className="text-xl font-black tracking-tighter text-white">VICEVERSA</span>
         </div>
-        
+
         <div className="relative z-10">
           <h2 className="text-5xl xl:text-6xl font-bold text-white leading-tight mb-6 tracking-tighter">
             Crafting <br />
@@ -41,13 +43,13 @@ export function LoginForm() {
 
         <div className="flex items-center gap-4 relative z-10 text-zinc-600 text-xs font-bold uppercase tracking-widest">
           <ShieldCheck size={16} className="text-brand" />
-           Secure Login 
+          Secure Login
         </div>
       </div>
 
       {/* RIGHT SIDE: Login Form - Full width on mobile */}
       <div className="w-full lg:w-[50%] p-6 md:p-12 lg:p-20 flex flex-col justify-center bg-black relative">
-        
+
         <div className="lg:hidden flex items-center justify-center gap-2 mb-12">
           <img src="/viceversalogo.png" alt="Logo" className="w-8 h-8 object-contain" />
           <span className="text-lg font-black tracking-tighter text-white">VICEVERSA</span>
@@ -69,9 +71,9 @@ export function LoginForm() {
             <div className="space-y-2">
               <label className="text-[10px] font-bold text-zinc-500 ml-1 uppercase tracking-widest">Email</label>
               <input
-                type="email" 
+                type="email"
                 placeholder="admin@viceversa.com"
-                value={email} 
+                value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full p-4 rounded-xl border border-zinc-800 bg-zinc-900/20 text-white placeholder:text-zinc-700 outline-none focus:border-brand transition-all text-sm"
                 required
@@ -80,18 +82,33 @@ export function LoginForm() {
 
             <div className="space-y-2">
               <label className="text-[10px] font-bold text-zinc-500 ml-1 uppercase tracking-widest">Password</label>
-              <input
-                type="password" 
-                placeholder="••••••••"
-                value={password} 
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-4 rounded-xl border border-zinc-800 bg-zinc-900/20 text-white placeholder:text-zinc-700 outline-none focus:border-brand transition-all text-sm"
-                required
-              />
+              <div className="relative group">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full p-4 pr-12 rounded-xl border border-zinc-800 bg-zinc-900/20 text-white placeholder:text-zinc-700 outline-none focus:border-brand transition-all text-sm"
+                  required
+                />
+
+                {/* WIFI STYLE TOGGLE BUTTON */}
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-brand transition-colors p-1"
+                >
+                  {showPassword ? (
+                    <Wifi size={18} className="text-brand" />
+                  ) : (
+                    <WifiOff size={18} />
+                  )}
+                </button>
+              </div>
             </div>
 
             <button
-              type="submit" 
+              type="submit"
               disabled={loading}
               className="cursor-pointer w-full bg-brand hover:bg-[#1e7a53] text-white p-4 rounded-xl font-bold text-sm transition-all disabled:opacity-50 flex items-center justify-center gap-2 group shadow-xl shadow-emerald-950/20"
             >

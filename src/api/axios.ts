@@ -1,46 +1,43 @@
 import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
+import { toast } from 'sonner';
 
-// Access the VITE_ prefixed env variable
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://viceversa.pythonanywhere.com/api';
 
 const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, 
 });
 
-// Request interceptor to attach bearer token
-api.interceptors.request.use(
-  (config) => {
-    // In a real scenario we might read this directly from localStorage or from Zustand.
-    // Zustand's getState allows reading state outside of React components.
-    const token = useAuthStore.getState().token;
-    
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-// Response interceptor to handle global auth errors
+// Response Interceptor
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   async (error) => {
-    if (error.response && error.response.status === 401) {
-      // Logic to handle 401 Unauthorized via Zustand
-      useAuthStore.getState().logout();
+    const originalRequest = error.config; 
+
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
       
-      // Optionally redirect to login, but usually React Router handles the route change
-      // if state reflects logged out.
+      if (window.location.pathname !== '/login' && window.location.pathname !== '/') {
+        
+        originalRequest._retry = true; 
+
+        try {
+          await axios.post(`${API_URL}/auth/refresh/`, {}, { withCredentials: true });
+
+          return api(originalRequest);
+
+        } catch (refreshError) {
+          useAuthStore.getState().logout();
+          toast.error("Session expired. Please login again.");
+          window.location.replace('/login');
+          return Promise.reject(refreshError);
+        }
+      }
     }
+    
     return Promise.reject(error);
   }
 );

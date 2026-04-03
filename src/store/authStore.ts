@@ -1,27 +1,23 @@
 import { create } from 'zustand';
 
 interface AuthState {
-  token: string | null;
+  user: any | null;
   isAuthenticated: boolean;
-  setToken: (token: string | null) => void;
-  login: (token: string, user: any) => void;
+  login: (user: any) => void;
   logout: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-  token: localStorage.getItem('token') || null,
-  isAuthenticated: !!localStorage.getItem('token'),
-  setToken: (token) => {
-    if (token) localStorage.setItem('token', token);
-    else localStorage.removeItem('token');
-    set({ token, isAuthenticated: !!token });
+  user: JSON.parse(localStorage.getItem('user') || 'null'),
+  isAuthenticated: !!localStorage.getItem('user'),
+
+  login: (user) => {
+    localStorage.setItem('user', JSON.stringify(user));
+    set({ user, isAuthenticated: true });
   },
-  login: (token, _user) => {
-    localStorage.setItem('token', token);
-    set({ token, isAuthenticated: true });
-  },
+
   logout: () => {
-    localStorage.removeItem('token');
-    set({ token: null, isAuthenticated: false });
+    localStorage.removeItem('user');
+    set({ user: null, isAuthenticated: false });
   }
 }));

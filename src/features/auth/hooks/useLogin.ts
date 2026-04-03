@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
+import api from '@/api/axios'; 
+import { toast } from 'sonner';
 
 export function useLogin() {
   const [email, setEmail] = useState('');
@@ -16,23 +18,26 @@ export function useLogin() {
     setLoading(true);
     setAuthError(null);
     
-    console.log("Simulating API Call for:", email);
-    
-    setTimeout(() => {
-      // Dummy user and token to satisfy Zustand
-      login("dummy-token-xyz", { email });
+    try {
+      const response = await api.post('/auth/login/', { email, password });
+
+      if (response.status === 200) {
+        login(response.data.user); 
+        toast.success(`Successfully logged in !`);
+        navigate('/admin', { replace: true });
+      }
+    } catch (error: any) {
+      console.error("Login Error:", error);
+      setAuthError(error.response?.data?.error || "Invalid email or password. Please try again.");
+    } finally {
       setLoading(false);
-      navigate('/admin', { replace: true });
-    }, 2000);
+    }
   };
 
   return {
-    email,
-    setEmail,
-    password,
-    setPassword,
-    loading,
-    authError,
+    email, setEmail,
+    password, setPassword,
+    loading, authError,
     handleEmailLogin
   };
 }
