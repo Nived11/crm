@@ -5,18 +5,45 @@
   --color-brand: var(--brand);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --animate-shimmer: shimmer 2s infinite;
+
+  @keyframes shimmer {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(100%); }
+  }
 }
 
 :root {
   --background: #ffffff;
   --foreground: #0a0a0a;
-  --brand: #1a7a50; /* Green */
+  --brand: #1a7a50; 
 }
 
 .dark {
   --background: #000000;
   --foreground: #ffffff;
-  --brand: #2ecc71; /* Brighter Green */
+  --brand: #2ecc71; 
+}
+
+.shimmer-bg {
+  position: relative;
+  overflow: hidden;
+  background-color: #18181b; 
+}
+
+.shimmer-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.03) 20%,
+    rgba(255, 255, 255, 0.08) 60%,
+    transparent
+  );
+  animation: shimmer 2s infinite;
 }
 
 @layer components {
@@ -35,3 +62,8 @@ body {
   color: var(--foreground);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+::-webkit-scrollbar { width: 4px; height: 8px; }
+::-webkit-scrollbar-track { background: #0a0a0a; }
+::-webkit-scrollbar-thumb { background: #259566; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #1e7a53; }

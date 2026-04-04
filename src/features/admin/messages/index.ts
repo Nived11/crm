@@ -1,1 +1,1 @@
-export { default as MessageCenter } from './MessageCenter';
+export { default as MessageCenter } from './components/MessageCenter';

@@ -8,7 +8,6 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-  // Persist only user info, not tokens
   user: JSON.parse(localStorage.getItem('user_profile') || 'null'),
   isAuthenticated: !!localStorage.getItem('user_profile'),
 

@@ -1,25 +1,32 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, Outlet } from "react-router-dom";
-import { useLogout } from "@/hooks/useLogout"; 
-import { 
-  LayoutDashboard, 
-  Briefcase, 
-  Users, 
-  MessageSquare, 
-  Settings, 
-  LogOut, 
-  ChevronLeft, 
-  ChevronRight, 
-  Menu, 
+import { useLogout } from "@/hooks/useLogout";
+import {
+  LayoutDashboard,
+  Briefcase,
+  Users,
+  MessageSquare,
+  Settings,
+  LogOut,
+  ChevronLeft,
+  ChevronRight,
+  Menu,
   X
 } from "lucide-react";
 
 export default function AdminLayout() {
   const { pathname } = useLocation();
   const { logout } = useLogout();
-  
+  const mainContentRef = useRef<HTMLDivElement>(null);
+
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+  useEffect(() => {
+    if (mainContentRef.current) {
+      mainContentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [pathname]);
 
   useEffect(() => {
     document.documentElement.classList.add('dark');
@@ -29,57 +36,57 @@ export default function AdminLayout() {
   if (isLoginPage) return <div className="dark bg-black min-h-screen"><Outlet /></div>;
 
   const menuItems = [
-    { 
+    {
       name: "Dashboard",
-      header: "Dashboard Overview", 
-      href: "/admin", 
-      icon: LayoutDashboard, 
-      desc: "Get an overview of your admin panel." 
+      header: "Dashboard Overview",
+      href: "/admin",
+      icon: LayoutDashboard,
+      desc: "Get an overview of your admin panel."
     },
-    { 
-      name: "Projects", 
+    {
+      name: "Projects",
       header: "Project Management",
-      href: "/admin/projects", 
-      icon: Briefcase, 
-      desc: "Manage and track all your ongoing works." 
+      href: "/admin/projects",
+      icon: Briefcase,
+      desc: "Manage and track all your ongoing works."
     },
-    { 
-      name: "Clients", 
+    {
+      name: "Clients",
       header: "Client Relations",
-      href: "/admin/clients", 
-      icon: Users, 
-      desc: "Keep updated with your client base and relations." 
+      href: "/admin/clients",
+      icon: Users,
+      desc: "Keep updated with your client base and relations."
     },
-    { 
-      name: "Messages", 
+    {
+      name: "Messages",
       header: "Message Center",
-      href: "/admin/messages", 
-      icon: MessageSquare, 
-      desc: "Check your latest inquiries and conversations." 
+      href: "/admin/messages",
+      icon: MessageSquare,
+      desc: "Check your latest inquiries and conversations."
     },
-    { 
-      name: "Settings", 
+    {
+      name: "Settings",
       header: "Admin Settings",
-      href: "/admin/settings", 
-      icon: Settings, 
-      desc: "Customize your admin panel and preferences." 
+      href: "/admin/settings",
+      icon: Settings,
+      desc: "Customize your admin panel and preferences."
     },
   ];
 
-  const currentPage = menuItems.find(item => 
+  const currentPage = menuItems.find(item =>
     pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href))
   );
-  
+
   const pageTitle = currentPage ? currentPage.header : "Admin";
   const pageDesc = currentPage ? currentPage.desc : "Manage your workspace efficiently.";
 
   return (
     <div className="dark flex h-screen bg-black text-white overflow-hidden font-sans">
-      
+
       {/* Mobile Top Bar */}
       <div className="lg:hidden fixed top-0 w-full h-16 bg-zinc-950 border-b border-zinc-800 flex items-center justify-between px-4 z-50">
         <div className="flex items-center gap-2">
-          <img src="/viceversalogo.png" alt="Logo" className="w-8 h-8" /> 
+          <img src="/viceversalogo.png" alt="Logo" className="w-8 h-8" />
           <div className="border-b border-brand/30 text-xs font-bold">VICEVERSA</div>
         </div>
         <button onClick={() => setIsMobileOpen(!isMobileOpen)} className="p-2 text-zinc-400">
@@ -93,7 +100,7 @@ export default function AdminLayout() {
       )}
 
       {/* Sidebar */}
-      <aside 
+      <aside
         className={`
           fixed lg:relative top-0 left-0 h-full bg-black border-r border-zinc-900 
           transition-all duration-300 ease-in-out z-50 flex flex-col
@@ -101,7 +108,7 @@ export default function AdminLayout() {
           ${isCollapsed ? "lg:w-22" : "lg:w-60"}
         `}
       >
-        <button 
+        <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="cursor-pointer hidden lg:flex absolute -right-4 top-1/2 -translate-y-1/2 bg-zinc-900 border border-zinc-800 rounded-full p-1.5 text-zinc-400 hover:text-brand transition-all shadow-md z-[60]"
         >
@@ -111,9 +118,9 @@ export default function AdminLayout() {
         <div className="h-20 flex items-center px-6 border-b border-zinc-900">
           <div className="flex items-center gap-3 justify-center">
             <img src="/viceversalogo.png" alt="Logo" className="w-10 h-10" />
-             <span className={`text-md font-semibold border-b border-brand/30 tracking-tight text-white transition-opacity duration-200 ${isCollapsed ? "lg:hidden" : ""}`}>
-               VICEVERSA
-             </span>
+            <span className={`text-md font-semibold border-b border-brand/30 tracking-tight text-white transition-opacity duration-200 ${isCollapsed ? "lg:hidden" : ""}`}>
+              VICEVERSA
+            </span>
           </div>
         </div>
 
@@ -121,15 +128,14 @@ export default function AdminLayout() {
           {menuItems.map((item) => {
             const isActive = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href));
             return (
-              <Link 
+              <Link
                 key={item.name}
-                to={item.href} 
+                to={item.href}
                 onClick={() => setIsMobileOpen(false)}
-                className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-200 group ${
-                  isActive 
-                    ? "bg-brand/10 text-brand font-bold" 
+                className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-200 group ${isActive
+                    ? "bg-brand/10 text-brand font-bold"
                     : "text-zinc-500 hover:bg-zinc-900 hover:text-zinc-100"
-                }`}
+                  }`}
               >
                 <item.icon size={22} className="min-w-[22px]" />
                 <span className={`text-sm tracking-wide transition-opacity duration-200 ${isCollapsed ? "lg:hidden" : ""}`}>
@@ -141,7 +147,7 @@ export default function AdminLayout() {
         </nav>
 
         <div className="p-4 mt-auto">
-          <button 
+          <button
             onClick={logout}
             className={`bg-red-500/5 hover:bg-red-500/10 border border-red-900/30 cursor-pointer flex items-center gap-4 w-full px-4 py-4 rounded-2xl text-red-500 transition-all ${isCollapsed ? "lg:justify-center" : "justify-start"}`}
           >
@@ -152,8 +158,8 @@ export default function AdminLayout() {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 h-screen overflow-y-auto bg-black transition-all duration-300">
-        
+      <main ref={mainContentRef} className="flex-1 h-screen overflow-y-auto bg-black transition-all duration-300">
+
         {/* HEADER */}
         <header className="hidden lg:flex px-10 max-w-7xl mx-auto w-full bg-black py-6 mt-0 h-30 items-center justify-between sticky top-0 z-30">
           <div>
@@ -164,17 +170,17 @@ export default function AdminLayout() {
           </div>
 
           <div className="flex items-center gap-4 px-5 py-2.5 transition-all ">
-             <div className="flex flex-col items-end">
-               <span className="text-sm font-bold text-zinc-100 tracking-tight uppercase">Admin</span>
-                <span className="text-xs text-zinc-500">welcome back !</span>
-             </div>
-             <div className="w-15 h-15 rounded-full bg-brand/10 border-2 border-brand/20 overflow-hidden flex items-center justify-center">
-               <img 
-                  src="/adminico.png"
-                  alt="Admin Avatar"
-                  className="w-11 h-11 object-cover"
-               />
-             </div>
+            <div className="flex flex-col items-end">
+              <span className="text-sm font-bold text-zinc-100 tracking-tight uppercase">Admin</span>
+              <span className="text-xs text-zinc-500">welcome back !</span>
+            </div>
+            <div className="w-15 h-15 rounded-full bg-brand/10 border-2 border-brand/20 overflow-hidden flex items-center justify-center">
+              <img
+                src="/adminico.png"
+                alt="Admin Avatar"
+                className="w-11 h-11 object-cover"
+              />
+            </div>
           </div>
         </header>
 
