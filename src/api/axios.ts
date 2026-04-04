@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
-import { toast } from 'sonner';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://viceversa.pythonanywhere.com/api';
 
@@ -9,35 +8,41 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  // RULE: Mandatory for Cookie-based Auth
   withCredentials: true, 
 });
 
-// Response Interceptor
+/**
+ * 🔄 Response Interceptor: Silent Refresh Logic
+ */
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const originalRequest = error.config; 
+    const originalRequest = error.config;
 
-    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+    // RULE: Handle 401 Unauthorized (Expired Access Token)
+    if (error.response?.status === 401 && !originalRequest._retry) {
       
-      if (window.location.pathname !== '/login' && window.location.pathname !== '/') {
+      // Prevent infinite loops if the login or refresh call itself fails with 401
+      if (originalRequest.url?.includes('/auth/login') || originalRequest.url?.includes('/auth/refresh')) {
+         return Promise.reject(error);
+      }
+
+      originalRequest._retry = true;
+
+      try {
+        // RULE: POST /auth/refresh/ with empty body and credentials
+        await axios.post(`${API_URL}/auth/refresh/`, {}, { withCredentials: true });
         
-        originalRequest._retry = true; 
-
-        try {
-          await axios.post(`${API_URL}/auth/refresh/`, {}, { withCredentials: true });
-
-          return api(originalRequest);
-
-        } catch (refreshError) {
-          useAuthStore.getState().logout();
-          toast.error("Session expired. Please login again.");
-          window.location.replace('/login');
-          return Promise.reject(refreshError);
-        }
+        // Retry the original request (cookies will now be updated)
+        return api(originalRequest);
+      } catch (refreshError) {
+        // If refresh fails, the session is dead. Clear local state and redirect.
+        useAuthStore.getState().logout();
+        window.location.replace('/login');
+        return Promise.reject(refreshError);
       }
     }
-    
     return Promise.reject(error);
   }
 );

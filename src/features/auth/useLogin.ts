@@ -18,36 +18,18 @@ export function useLogin() {
     setLoading(true);
     setAuthError(null);
     try {
+      // RULE: Backend set cookies directly via withCredentials: true
       const response = await api.post('/auth/login/', { email, password });
+      
       if (response.status === 200) {
+        // Save user profile only, no tokens in localStorage
         login(response.data.user); 
-        toast.success(`Successfully logged in!`);
+        toast.success(`Welcome back, Admin!`);
         navigate('/admin', { replace: true });
       }
     } catch (error: any) {
-      setAuthError(error.response?.data?.error || "Invalid credentials.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-const handleGoogleLoginSuccess = async (credentialResponse: any) => {
-    setLoading(true);
-    try {
-      const idToken = credentialResponse.credential;
-
-      const response = await api.post('/auth/google/', { 
-        token: idToken 
-      });
-
-      if (response.status === 200) {
-        login(response.data.user); 
-        toast.success("Successfully logged in!");
-        navigate('/admin', { replace: true });
-      }
-    } catch (error: any) {
-      console.error("Backend Error:", error.response?.data);
-      setAuthError(error.response?.data?.error || "Google verification failed");
+      console.error("Login Error:", error.response?.data);
+      setAuthError(error.response?.data?.error || "Invalid email or password.");
     } finally {
       setLoading(false);
     }
@@ -55,7 +37,6 @@ const handleGoogleLoginSuccess = async (credentialResponse: any) => {
 
   return {
     email, setEmail, password, setPassword,
-    loading, authError, handleEmailLogin,
-    handleGoogleLoginSuccess
+    loading, authError, handleEmailLogin
   };
 }

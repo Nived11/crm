@@ -155,7 +155,7 @@ export default function AdminLayout() {
       <main className="flex-1 h-screen overflow-y-auto bg-black transition-all duration-300">
         
         {/* HEADER */}
-        <header className="hidden lg:flex px-10 max-w-7xl mx-auto w-full py-6 mt-6 h-30 items-center justify-between sticky top-0 z-30">
+        <header className="hidden lg:flex px-10 max-w-7xl mx-auto w-full bg-black py-6 mt-0 h-30 items-center justify-between sticky top-0 z-30">
           <div>
             <h1 className="text-3xl font-bold tracking-tighter text-white">
               {pageTitle}
