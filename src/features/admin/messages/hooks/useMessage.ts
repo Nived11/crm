@@ -12,7 +12,7 @@ export function useMessage() {
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['messages', page],
     queryFn: async () => {
-      const response = await api.get(`/contcts/admin/list/?page=${page}`);
+      const response = await api.get(`/contacts/admin/list/?page=${page}`);
       return response.data;
     },
     refetchInterval: 30000,
