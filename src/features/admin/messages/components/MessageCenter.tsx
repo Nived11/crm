@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { useMessage } from '../hooks/useMessage';
-import { Mail, CheckCircle2, Phone, ChevronLeft, Send } from 'lucide-react';
-import { MessageListSkeleton, MessageDetailSkeleton } from './MessageSkeleton';
-import { ErrorMessage } from '@/components/ErrorMessage';
-import { Pagination } from '@/components/Pagination';
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useMessage } from "../hooks/useMessage";
+import { Mail, CheckCircle2, Phone, ChevronLeft, Send } from "lucide-react";
+import { MessageListSkeleton, MessageDetailSkeleton } from "./MessageSkeleton";
+import { ErrorMessage } from "@/components/ErrorMessage";
+import { Pagination } from "@/components/Pagination";
 
 const MessageCenter = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const messageIdFromUrl = searchParams.get('id');
+  const messageIdFromUrl = searchParams.get("id");
 
   const {
     messages,
@@ -27,14 +27,14 @@ const MessageCenter = () => {
   } = useMessage();
 
   const [selectedMessage, setSelectedMessage] = useState<any>(null);
-  const [replyText, setReplyText] = useState('');
+  const [replyText, setReplyText] = useState("");
 
   const scrollToTop = () => {
-    const mainContainer = document.querySelector('main');
+    const mainContainer = document.querySelector("main");
     if (mainContainer) {
-      mainContainer.scrollTo({ top: 0, behavior: 'smooth' });
+      mainContainer.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -48,18 +48,18 @@ const MessageCenter = () => {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
     }).format(date);
   };
 
   const loadMessageDetails = async (id: number) => {
     const data = await detailMutation.mutateAsync(id);
     setSelectedMessage(data);
-    setReplyText('');
+    setReplyText("");
     setTimeout(scrollToTop, 100);
   };
 
@@ -81,13 +81,16 @@ const MessageCenter = () => {
 
   const onSendReply = async () => {
     if (!selectedMessage) return;
-    await replyMutation.mutateAsync({ id: selectedMessage.id, text: replyText });
+    await replyMutation.mutateAsync({
+      id: selectedMessage.id,
+      text: replyText,
+    });
     setSelectedMessage({
       ...selectedMessage,
       is_replied: true,
       reply_message: replyText,
     });
-    setReplyText('');
+    setReplyText("");
   };
 
   if (isError) {
@@ -99,7 +102,10 @@ const MessageCenter = () => {
   }
 
   return (
-    <div id="message-center-top" className="bg-black min-h-screen text-zinc-300 mb-10">
+    <div
+      id="message-center-top"
+      className="bg-black min-h-screen text-zinc-300 mb-10"
+    >
       <div className="max-w-7xl mx-auto p-0">
         {!selectedMessage && (
           <div className="mb-8 flex items-center justify-between px-4 sm:px-0">
@@ -107,7 +113,7 @@ const MessageCenter = () => {
               <Mail className="text-brand" size={28} /> Inbox
             </h1>
             <span className="text-[10px] bg-zinc-900 text-zinc-500 px-4 py-1.5 rounded-full uppercase tracking-[0.15em] font-black border border-zinc-800">
-              {totalCount} Messages
+              {messages.length}/{totalCount} Messages
             </span>
           </div>
         )}
@@ -127,24 +133,27 @@ const MessageCenter = () => {
                     <div
                       key={msg.id}
                       onClick={() => handleOpenMessage(msg.id)}
-                      className={`group p-4 md:p-5 cursor-pointer transition-all border border-zinc-900 rounded-xl sm:rounded-xl hover:border-brand/30 hover:bg-zinc-900/40 relative flex items-center gap-3 md:gap-4 ${!msg.is_read
-                          ? 'bg-brand/5 border-brand/20'
-                          : 'bg-[#0a0a0a]'
-                        }`}
+                      className={`group p-4 md:p-5 cursor-pointer transition-all border border-zinc-900 rounded-xl sm:rounded-xl hover:border-brand/30 hover:bg-zinc-900/40 relative flex items-center gap-3 md:gap-4 ${
+                        !msg.is_read
+                          ? "bg-brand/5 border-brand/20"
+                          : "bg-[#0a0a0a]"
+                      }`}
                     >
                       <div
-                        className={`w-2 h-2 md:w-2.5 md:h-2.5 rounded-full shrink-0 ${!msg.is_read
-                            ? 'bg-brand shadow-[0_0_8px_rgba(37,149,102,0.4)]'
-                            : 'bg-transparent'
-                          }`}
+                        className={`w-2 h-2 md:w-2.5 md:h-2.5 rounded-full shrink-0 ${
+                          !msg.is_read
+                            ? "bg-brand shadow-[0_0_8px_rgba(37,149,102,0.4)]"
+                            : "bg-transparent"
+                        }`}
                       />
                       <div className="flex-1 min-w-0">
                         <div className="flex justify-between items-center mb-1">
                           <span
-                            className={`text-sm truncate ${!msg.is_read
-                                ? 'text-white font-black uppercase'
-                                : 'text-zinc-500 uppercase font-medium'
-                              }`}
+                            className={`text-sm truncate ${
+                              !msg.is_read
+                                ? "text-white font-black uppercase"
+                                : "text-zinc-500 uppercase font-medium"
+                            }`}
                           >
                             {msg.name}
                           </span>
@@ -153,8 +162,11 @@ const MessageCenter = () => {
                           </span>
                         </div>
                         <h4
-                          className={`text-sm truncate ${!msg.is_read ? 'text-zinc-200 font-medium' : 'text-zinc-600'
-                            }`}
+                          className={`text-sm truncate ${
+                            !msg.is_read
+                              ? "text-zinc-200 font-medium"
+                              : "text-zinc-600"
+                          }`}
                         >
                           {msg.subject}
                         </h4>
@@ -253,11 +265,13 @@ const MessageCenter = () => {
                           <div className="flex justify-end">
                             <button
                               onClick={onSendReply}
-                              disabled={replyMutation.isPending || !replyText.trim()}
+                              disabled={
+                                replyMutation.isPending || !replyText.trim()
+                              }
                               className="bg-brand text-white px-8 py-3 rounded-xl font-bold text-xs uppercase tracking-widest flex items-center gap-2 transition-all hover:scale-105 active:scale-95 disabled:opacity-30"
                             >
                               {replyMutation.isPending ? (
-                                'Sending...'
+                                "Sending..."
                               ) : (
                                 <>
                                   Send Reply <Send size={14} />

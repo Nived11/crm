@@ -9,17 +9,14 @@ export const useLogout = () => {
 
   const logout = async () => {
     try {
-      // 1. 🚀 ബാക്ക് എൻഡ് കുക്കികൾ ഡിലീറ്റ് ചെയ്യാൻ പറയുന്നു
       await api.post("/auth/logout/"); 
       
-      // 2. ലോക്കൽ സ്റ്റേറ്റ് ക്ലിയർ ചെയ്ത് നാവിഗേറ്റ് ചെയ്യുന്നു
       clearSession();
       navigate("/login", { replace: true }); 
       toast.success("Logged out successfully");
       
     } catch (error: any) {
       console.error("Logout Error:", error);
-      // API ഫെയിൽ ആയാലും ലോക്കൽ സ്റ്റേറ്റ് ക്ലിയർ ചെയ്യുക
       clearSession();
       toast.info("Session ended");
       navigate("/login", { replace: true });

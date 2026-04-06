@@ -1,1 +1,1 @@
-export { default as ClientManager } from './ClientManager';
+export { default as ClientManager } from './components/ClientManager';

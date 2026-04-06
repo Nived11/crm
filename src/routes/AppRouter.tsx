@@ -17,8 +17,8 @@ import NotFoundPage from '@/pages/client/NotFoundPage';
 import DashboardPage from '@/pages/admin/DashboardPage';
 import AdminProjectsPage from '@/pages/admin/AdminProjectsPage';
 import AdminClientsPage from '@/pages/admin/AdminClientsPage';
+import AdminStatusTrackerPage from '@/pages/admin/AdminStatusTrackerPage';
 import AdminMessagesPage from '@/pages/admin/AdminMessagesPage';
-import AdminSettingsPage from '@/pages/admin/AdminSettingsPage';
 
 export default function AppRouter() {
   const isAuthenticated = useAuthStore(state => state.isAuthenticated);
@@ -46,8 +46,8 @@ export default function AppRouter() {
         <Route index element={<DashboardPage />} />
         <Route path="projects" element={<AdminProjectsPage />} />
         <Route path="clients" element={<AdminClientsPage />} />
+        <Route path="status-tracker" element={<AdminStatusTrackerPage />} />
         <Route path="messages" element={<AdminMessagesPage />} />
-        <Route path="settings" element={<AdminSettingsPage />} />
       </Route>
       
       <Route path="*" element={<NotFoundPage />} />

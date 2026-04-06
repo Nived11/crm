@@ -5,6 +5,7 @@ import {
   LayoutDashboard,
   Briefcase,
   Users,
+  Activity,
   MessageSquare,
   Settings,
   LogOut,
@@ -52,10 +53,17 @@ export default function AdminLayout() {
     },
     {
       name: "Clients",
-      header: "Client Relations",
+      header: "Client Management ",
       href: "/admin/clients",
       icon: Users,
       desc: "Keep updated with your client base and relations."
+    },
+    {
+      name: " Status Tracker",
+      header: "Status Tracker",
+      href: "/admin/status-tracker",
+      icon: Activity,
+      desc: "Track the status of your projects and clients."
     },
     {
       name: "Messages",
@@ -64,13 +72,7 @@ export default function AdminLayout() {
       icon: MessageSquare,
       desc: "Check your latest inquiries and conversations."
     },
-    {
-      name: "Settings",
-      header: "Admin Settings",
-      href: "/admin/settings",
-      icon: Settings,
-      desc: "Customize your admin panel and preferences."
-    },
+    
   ];
 
   const currentPage = menuItems.find(item =>
