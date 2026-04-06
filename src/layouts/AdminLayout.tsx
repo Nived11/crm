@@ -185,7 +185,7 @@ export default function AdminLayout() {
         </header>
 
         {/* Page Content */}
-        <div className="p-6 lg:p-10 pt-24 lg:pt-10 max-w-7xl mx-auto">
+        <div className="py-6 lg:py-10 px-4 sm:px-10 pt-24 lg:pt-10 max-w-7xl mx-auto">
           <Outlet />
         </div>
       </main>

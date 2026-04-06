@@ -99,7 +99,7 @@ const MessageCenter = () => {
   }
 
   return (
-    <div id="message-center-top" className="bg-black min-h-screen text-zinc-300">
+    <div id="message-center-top" className="bg-black min-h-screen text-zinc-300 mb-10">
       <div className="max-w-7xl mx-auto p-0">
         {!selectedMessage && (
           <div className="mb-8 flex items-center justify-between px-4 sm:px-0">
@@ -127,7 +127,7 @@ const MessageCenter = () => {
                     <div
                       key={msg.id}
                       onClick={() => handleOpenMessage(msg.id)}
-                      className={`group p-4 md:p-5 cursor-pointer transition-all border border-zinc-900 rounded-md sm:rounded-xl hover:border-brand/30 hover:bg-zinc-900/40 relative flex items-center gap-3 md:gap-4 ${!msg.is_read
+                      className={`group p-4 md:p-5 cursor-pointer transition-all border border-zinc-900 rounded-xl sm:rounded-xl hover:border-brand/30 hover:bg-zinc-900/40 relative flex items-center gap-3 md:gap-4 ${!msg.is_read
                           ? 'bg-brand/5 border-brand/20'
                           : 'bg-[#0a0a0a]'
                         }`}
@@ -142,7 +142,7 @@ const MessageCenter = () => {
                         <div className="flex justify-between items-center mb-1">
                           <span
                             className={`text-sm truncate ${!msg.is_read
-                                ? 'text-white font-black'
+                                ? 'text-white font-black uppercase'
                                 : 'text-zinc-500 uppercase font-medium'
                               }`}
                           >
