@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useStatusTracker } from "../hooks/useStatusTracker";
 import { 
   Search, Edit3, Trash2, X, Calendar, 
@@ -8,7 +8,7 @@ import {
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { ErrorMessage } from "@/components/ErrorMessage";
 import { Pagination } from "@/components/Pagination";
-import { ClientTableSkeleton, ClientMobileSkeleton } from "./ClientSkeleton";
+import { ClientTableSkeleton, ClientMobileSkeleton } from "./StatusTrackerSkelton";
 
 const StatusTracker = () => {
   const {
@@ -22,11 +22,30 @@ const StatusTracker = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedClient, setSelectedClient] = useState<any>(null);
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
-  // Mobile menu state
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
 
   const [statusForm, setStatusForm] = useState({ status: "Pending", remarks: "" });
   const [followUpDateTime, setFollowUpDateTime] = useState("");
+
+  // Close modal logic
+  const closeStatusModal = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setIsStatusModalOpen(false);
+    setSelectedClient(null);
+  };
+
+  // Browser back button handle cheyyan (Optional safety)
+  useEffect(() => {
+    if (isStatusModalOpen) {
+      const handleBackButton = (e: PopStateEvent) => {
+        e.preventDefault();
+        setIsStatusModalOpen(false);
+      };
+      window.history.pushState(null, "", window.location.pathname);
+      window.addEventListener("popstate", handleBackButton);
+      return () => window.removeEventListener("popstate", handleBackButton);
+    }
+  }, [isStatusModalOpen]);
 
   const toggleRow = (id: number) => {
     setExpandedRows(prev => 
@@ -70,10 +89,10 @@ const StatusTracker = () => {
 
   return (
     <div className="bg-black min-h-screen pb-10">
-      <div className="max-w-7xl mx-auto px-0 md:px-4">
+      <div className="max-w-7xl mx-auto px-0 ">
         
         {/* Search Header */}
-        <div className="mb-6 flex items-center justify-between gap-4 px-4 md:px-0 pt-6">
+        <div className="mb-6 flex items-center justify-between gap-4 px-0 md:px-0">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600" size={16} />
             <input
@@ -85,7 +104,7 @@ const StatusTracker = () => {
           </div>
         </div>
 
-        <div className="bg-[#080808] border border-zinc-900 rounded-3xl overflow-hidden shadow-2xl mx-4 md:mx-0">
+        <div className="bg-[#080808] border border-zinc-900 rounded-2xl overflow-hidden shadow-2xl mx-0 md:mx-0">
           {loading ? (
             <>
               <div className="hidden md:block"><ClientTableSkeleton /></div>
@@ -141,7 +160,7 @@ const StatusTracker = () => {
                                 </div>
                                 <div className="flex items-center gap-2 text-zinc-500">
                                    <MapPin size={12} />
-                                   <span className="text-[11px]">{client.place || 'Location N/A'}</span>
+                                   <span className="text-[11px]">{client.location || 'Location N/A'}</span>
                                 </div>
                              </div>
                           </td>
@@ -175,9 +194,9 @@ const StatusTracker = () => {
                                         {client.remarks ? `"${client.remarks}"` : "No remarks added for this lead."}
                                      </p>
                                      {client.follow_up_datetime && (
-                                       <div className="mt-4 flex items-center gap-2 text-brand font-bold text-[10px] bg-brand/5 w-fit px-3 py-1 rounded-lg border border-brand/10 uppercase">
-                                          <Calendar size={12}/> Scheduled: {new Date(client.follow_up_datetime).toLocaleString()}
-                                       </div>
+                                        <div className="mt-4 flex items-center gap-2 text-brand font-bold text-[10px] bg-brand/5 w-fit px-3 py-1 rounded-lg border border-brand/10 uppercase">
+                                           <Calendar size={12}/> Scheduled: {new Date(client.follow_up_datetime).toLocaleString()}
+                                        </div>
                                      )}
                                   </div>
                                </div>
@@ -195,7 +214,7 @@ const StatusTracker = () => {
                 {clients.map((client: any) => (
                   <div key={client.id} className="p-5 active:bg-zinc-900/30 transition-all relative">
                     <div className="flex justify-between items-start mb-4">
-                      <div className="flex items-center gap-3" onClick={() => toggleRow(client.id)}>
+                      <div className="flex items-center gap-3 flex-1" onClick={() => toggleRow(client.id)}>
                          <div className="w-11 h-11 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-500"><User size={20} /></div>
                          <div>
                             <h4 className="text-sm font-bold text-white">{client.owner_name}</h4>
@@ -203,8 +222,7 @@ const StatusTracker = () => {
                          </div>
                       </div>
                       
-                      {/* Mobile 3 Dots Action */}
-                      <div className="relative">
+                      <div className="relative flex items-center gap-1">
                         <button 
                           onClick={(e) => { e.stopPropagation(); setActiveMenu(activeMenu === client.id ? null : client.id) }} 
                           className="p-2 text-zinc-500"
@@ -225,21 +243,42 @@ const StatusTracker = () => {
                       </div>
                     </div>
 
-                    <div className="flex gap-4 mb-2 overflow-x-auto no-scrollbar" onClick={() => toggleRow(client.id)}>
-                       <div className="flex items-center gap-1.5 text-zinc-500 shrink-0"><Phone size={10}/> <span className="text-[10px] font-bold">{client.phone_number}</span></div>
-                       <div className="flex items-center gap-1.5 text-zinc-500 shrink-0"><MapPin size={10}/> <span className="text-[10px] font-bold">{client.place || 'Location N/A'}</span></div>
+                    {/* Quick Info & Status Bar */}
+                    <div className="flex flex-col gap-3" onClick={() => toggleRow(client.id)}>
+                        <div className="flex gap-4 overflow-x-auto no-scrollbar">
+                           <div className="flex items-center gap-1.5 text-zinc-500 shrink-0"><Phone size={10}/> <span className="text-[10px] font-bold">{client.phone_number}</span></div>
+                           <div className="flex items-center gap-1.5 text-zinc-500 shrink-0"><MapPin size={10}/> <span className="text-[10px] font-bold line-clamp-1">{client.location || 'Location N/A'}</span></div>
+                        </div>
+
+                        <div className="flex items-center justify-between bg-zinc-900/40 p-3 rounded-xl border border-zinc-800/50">
+                           <div className="flex flex-col">
+                              <p className="text-[8px] font-black text-zinc-600 uppercase tracking-widest mb-0.5">Status</p>
+                              <span className={`text-[10px] font-black uppercase tracking-tight ${
+                                client.status === 'Interested' ? 'text-green-500' : 
+                                client.status === 'Follow Up Later' ? 'text-blue-400' : 'text-zinc-400'
+                              }`}>{client.status}</span>
+                           </div>
+                           
+                           {client.follow_up_datetime && (
+                             <div className="text-right">
+                               <p className="text-[8px] font-black text-zinc-600 uppercase tracking-widest mb-0.5">Follow Up</p>
+                               <div className="flex items-center gap-1.5 text-brand font-bold text-[10px]">
+                                  <Calendar size={10}/> {new Date(client.follow_up_datetime).toLocaleDateString()}
+                               </div>
+                             </div>
+                           )}
+
+                           <div className="text-zinc-700 ml-2">
+                             {expandedRows.includes(client.id) ? <ChevronUp size={16}/> : <ChevronDown size={16}/>}
+                           </div>
+                        </div>
                     </div>
 
-                    <div className={`mt-3 overflow-hidden transition-all duration-300 ${expandedRows.includes(client.id) ? 'max-h-96' : 'max-h-0'}`}>
-                       <div className="bg-zinc-900/60 p-4 rounded-2xl border border-zinc-800/50 space-y-3">
-                         <div>
-                           <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1">Status</p>
-                           <span className="text-[10px] font-bold text-brand">{client.status}</span>
-                         </div>
-                         <div>
-                           <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1">Remarks</p>
-                           <p className="text-xs text-zinc-400 italic leading-snug">"{client.remarks || 'No remarks...'}"</p>
-                         </div>
+                    {/* Mobile Remarks (Collapsible) */}
+                    <div className={`overflow-hidden transition-all duration-300 ${expandedRows.includes(client.id) ? 'max-h-40 mt-3' : 'max-h-0'}`}>
+                       <div className="bg-brand/5 p-4 rounded-2xl border border-brand/10">
+                          <p className="text-[9px] font-black text-brand/60 uppercase tracking-widest mb-1 flex items-center gap-1.5"><MessageSquare size={10}/> Remarks</p>
+                          <p className="text-xs text-zinc-300 italic leading-relaxed">"{client.remarks || 'No remarks added...'}"</p>
                        </div>
                     </div>
                   </div>
@@ -254,16 +293,16 @@ const StatusTracker = () => {
         </div>
       </div>
 
-      {/* --- UPDATE STATUS MODAL (With Fixes) --- */}
+      {/* --- UPDATE STATUS MODAL --- */}
       {isStatusModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/95 backdrop-blur-md" onClick={() => setIsStatusModalOpen(false)}>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/95 backdrop-blur-md" onClick={(e) => closeStatusModal(e)}>
           <div onClick={(e) => e.stopPropagation()} className="bg-[#0c0c0c] w-full max-w-md rounded-[2.5rem] border border-zinc-800 p-8 shadow-2xl animate-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center mb-8">
               <div className="space-y-1">
                 <h2 className="text-[10px] font-black text-white uppercase tracking-[0.2em]">Update Call Log</h2>
                 <p className="text-xs text-zinc-500 font-bold">{selectedClient?.owner_name}</p>
               </div>
-              <button onClick={() => setIsStatusModalOpen(false)} className="text-zinc-600 hover:text-white bg-zinc-900 p-2 rounded-xl transition-colors"><X size={20}/></button>
+              <button onClick={(e) => closeStatusModal(e)} className="text-zinc-600 hover:text-white bg-zinc-900 p-2 rounded-xl transition-colors"><X size={20}/></button>
             </div>
             
             <form onSubmit={handleUpdate} className="space-y-6">
@@ -276,7 +315,6 @@ const StatusTracker = () => {
                     value={statusForm.status} 
                     onChange={(e) => setStatusForm({...statusForm, status: e.target.value})}
                   >
-                    {/* Styling the options specifically for Chromium/Firefox */}
                     <option value="Interested" className="bg-zinc-900 text-white p-4">Interested</option>
                     <option value="Not Interested" className="bg-zinc-900 text-white p-4">Not Interested</option>
                     <option value="Busy" className="bg-zinc-900 text-white p-4">Busy / Call Later</option>

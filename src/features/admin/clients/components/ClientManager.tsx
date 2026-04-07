@@ -3,7 +3,7 @@ import { useClients } from "../hooks/useClients";
 import { 
   Plus, Search, Edit3, Trash2, User, X, Phone, 
   MapPin, CheckCircle2, Calendar, ArrowLeft, Building2, 
-  MoreVertical, Inbox, Clock
+  MoreVertical, Inbox, Clock, AlertCircle
 } from "lucide-react";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { ErrorMessage } from "@/components/ErrorMessage";
@@ -23,6 +23,7 @@ const ClientManager = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [activeMobileMenu, setActiveMobileMenu] = useState<string | null>(null);
   const [searchValue, setSearchValue] = useState("");
+  const [formError, setFormError] = useState(""); 
 
   const [selectedClient, setSelectedClient] = useState<any>(null);
   const [categoryName, setCategoryName] = useState("");
@@ -32,12 +33,11 @@ const ClientManager = () => {
   });
 
   const [statusForm, setStatusForm] = useState({
-    status: "Pending", remarks: ""
+    status: "Interested", remarks: ""
   });
 
   const [followUpDateTime, setFollowUpDateTime] = useState("");
 
-  // --- Scroll to Top Utility ---
   const scrollToTop = () => {
     const mainContainer = document.querySelector("main");
     if (mainContainer) {
@@ -47,12 +47,12 @@ const ClientManager = () => {
     }
   };
 
-  // --- Modal Navigation Logic ---
   const closeAllModals = useCallback(() => {
     setIsClientModalOpen(false);
     setIsCategoryModalOpen(false);
     setIsStatusModalOpen(false);
     setIsDeleteModalOpen(false);
+    setFormError(""); 
     
     if (window.history.state === "modal-open") {
       window.history.back();
@@ -62,6 +62,7 @@ const ClientManager = () => {
 
   const openModal = (type: 'client' | 'category' | 'status', data: any = null) => {
     if (type === 'client') {
+      setFormError("");
       if (data) {
         setSelectedClient(data);
         setClientForm({
@@ -80,8 +81,12 @@ const ClientManager = () => {
       setIsCategoryModalOpen(true);
     } else if (type === 'status') {
       setSelectedClient(data);
-      setStatusForm({ status: "Pending", remarks: "" });
-      setFollowUpDateTime(""); 
+      // Removed "Pending" check and set default to Interested
+      setStatusForm({ 
+        status: data.status && data.status !== "Pending" ? data.status : "Interested", 
+        remarks: data.remarks || "" 
+      });
+      setFollowUpDateTime(data.follow_up_datetime || ""); 
       setIsStatusModalOpen(true);
     }
     
@@ -89,7 +94,6 @@ const ClientManager = () => {
     setTimeout(scrollToTop, 100);
   };
 
-  // --- Listen for Browser Back Button (popstate) ---
   useEffect(() => {
     const handlePopState = () => {
       setIsClientModalOpen(false);
@@ -102,7 +106,6 @@ const ClientManager = () => {
     return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
-  // --- Handle Page Change with Scroll ---
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
     setTimeout(scrollToTop, 100);
@@ -111,12 +114,13 @@ const ClientManager = () => {
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "").slice(0, 10);
     setClientForm({ ...clientForm, phone_number: value });
+    if (value.length === 10) setFormError(""); 
   };
 
   const handleAddClient = async (e: React.FormEvent) => {
     e.preventDefault();
     if (clientForm.phone_number.length !== 10) {
-      alert("Please enter a valid 10-digit phone number");
+      setFormError("Please enter a valid 10-digit phone number");
       return;
     }
     if (selectedClient) {
@@ -194,7 +198,6 @@ const ClientManager = () => {
           </div>
         </div>
 
-        {/* Desktop Table & Mobile List Container */}
         <div className="bg-[#080808] border border-zinc-900 rounded-xl md:rounded-2xl overflow-hidden shadow-2xl">
           
          {loading ? (
@@ -258,7 +261,7 @@ const ClientManager = () => {
                           <button 
                             disabled={client.has_called}
                             onClick={() => openModal('status', client)}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+                            className={`cursor-pointer flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
                               client.has_called 
                               ? 'bg-brand/10 border-brand/20 text-brand cursor-default' 
                               : 'bg-zinc-900 border-zinc-800 text-zinc-500 hover:border-zinc-600 hover:text-white'
@@ -369,7 +372,7 @@ const ClientManager = () => {
         >
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#0c0c0c] w-full max-w-sm rounded-[2rem] border border-zinc-800 p-8 shadow-2xl"
+            className="bg-[#0c0c0c] w-full max-w-sm rounded-2xl border border-zinc-800 p-8 shadow-2xl"
           >
             <div className="flex items-center gap-3 mb-6">
                 <button onClick={closeAllModals} className="p-2 -ml-2 text-zinc-400">
@@ -405,7 +408,7 @@ const ClientManager = () => {
         >
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#0c0c0c] w-full h-full md:h-auto md:max-w-2xl md:rounded-[2.5rem] md:border md:border-zinc-800 overflow-y-auto shadow-2xl animate-in fade-in zoom-in-95 duration-200"
+            className="bg-[#0c0c0c] w-full h-full md:h-auto md:max-w-2xl md:rounded-2xl md:border md:border-zinc-800 overflow-y-auto shadow-2xl animate-in fade-in zoom-in-95 duration-200"
           >
             <div className="sticky top-0 z-10 px-6 py-5 md:px-8 border-b border-zinc-900 flex justify-between items-center bg-black/50 backdrop-blur-xl">
               <div className="flex items-center gap-3">
@@ -437,17 +440,22 @@ const ClientManager = () => {
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Phone Number (10 Digits)</label>
                   <div className="relative">
-                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-700" size={16}/>
+                    <Phone className={`absolute left-4 top-1/2 -translate-y-1/2 ${formError ? 'text-red-500' : 'text-zinc-700'}`} size={16}/>
                     <input 
                         type="text"
                         inputMode="numeric"
                         required 
                         value={clientForm.phone_number} 
                         onChange={handlePhoneChange} 
-                        className="w-full bg-zinc-900/30 border border-zinc-800 p-4 pl-12 rounded-2xl text-sm text-white outline-none focus:border-brand/40" 
+                        className={`w-full bg-zinc-900/30 border p-4 pl-12 rounded-2xl text-sm text-white outline-none transition-colors ${formError ? 'border-red-500/50 focus:border-red-500' : 'border-zinc-800 focus:border-brand/40'}`} 
                         placeholder="Enter 10-digit number" 
                     />
                   </div>
+                  {formError && (
+                    <p className="text-red-500 text-[10px] font-bold flex items-center gap-1 mt-1 ml-1 animate-in slide-in-from-top-1">
+                      <AlertCircle size={12}/> {formError}
+                    </p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Location</label>
@@ -472,7 +480,7 @@ const ClientManager = () => {
                 <button 
                     type="submit" 
                     disabled={createMutation.isPending || updateMutation.isPending}
-                    className="w-full bg-brand text-white py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-lg shadow-brand/20 active:scale-[0.98] transition-all disabled:opacity-70"
+                    className="cursor-pointer w-full bg-brand text-white py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-lg shadow-brand/20 active:scale-[0.98] transition-all disabled:opacity-70"
                 >
                   {selectedClient 
                     ? (updateMutation.isPending ? "Updating Lead..." : "Update Information") 
@@ -492,7 +500,7 @@ const ClientManager = () => {
         >
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#0c0c0c] w-full max-w-md rounded-[2.5rem] border border-zinc-800 p-8 shadow-2xl"
+            className="bg-[#0c0c0c] w-full max-w-md rounded-2xl border border-zinc-800 p-8 shadow-2xl"
           >
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-[10px] font-black text-white uppercase tracking-[0.2em]">Log Call Outcome</h2>
@@ -503,7 +511,7 @@ const ClientManager = () => {
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Response</label>
                 <select required className="w-full bg-zinc-900/30 border border-zinc-800 p-4 rounded-2xl text-sm text-white outline-none focus:border-brand/40" value={statusForm.status} onChange={(e) => setStatusForm({...statusForm, status: e.target.value})}>
-                  <option value="Pending" className="bg-zinc-950">Pending</option>
+                  {/* "Pending" option removed from here */}
                   <option value="Interested" className="bg-zinc-950">Interested</option>
                   <option value="Not Interested" className="bg-zinc-950">Not Interested</option>
                   <option value="Busy" className="bg-zinc-950">Busy / Call Later</option>
