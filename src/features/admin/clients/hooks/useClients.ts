@@ -9,7 +9,7 @@ export function useClients() {
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [page, setPage] = useState(1);
-  const pageSize = 10;
+  const pageSize = 20;
 
   // Fetch Clients
   const { data, isLoading, isError, error, refetch } = useQuery({

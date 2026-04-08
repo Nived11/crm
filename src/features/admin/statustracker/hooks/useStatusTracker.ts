@@ -8,7 +8,7 @@ export function useStatusTracker() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
-  const pageSize = 10;
+  const pageSize = 20;
 
   // Fetch only "Marked as Called" clients
   const { data, isLoading, isError, error, refetch } = useQuery({
