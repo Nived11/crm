@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
-@variant dark (&:where(.dark, .dark *));
 
 @theme {
   --color-brand: var(--brand);
@@ -18,14 +17,10 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #0a0a0a;
-  --brand: #1a7a50; 
-}
-
-.dark {
-  --background: #000000;
-  --foreground: #ffffff;
-  --brand: #2ecc71; 
+  --foreground: #09090b;
+  --brand: #2ecc71;
+  --brand-gradient: linear-gradient(135deg, #2ecc71 0%, #2ecc71 50%, #2ecc71 100%);
+  --border: #e4e4e7;
 }
 
 .shimmer-bg {
@@ -51,12 +46,25 @@
 
 @layer components {
   .cn-toast {
-    background-color: #0a0a0a !important; 
-    color: #ffffff !important;
-    border: 1px solid #18181b !important; 
+    background-color: #ffffff !important; 
+    color: #09090b !important;
+    border: 1px solid #e4e4e7 !important; 
     border-radius: 12px !important;
     font-family: inherit;
     font-size: 14px !important;
+  }
+  
+  input, select, textarea {
+    @apply bg-zinc-50 border-zinc-200;
+  }
+}
+
+@layer base {
+  body {
+    @apply text-zinc-600;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-zinc-900;
   }
 }
 
@@ -66,7 +74,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   background-color: var(--background);
-  color: var(--foreground);
   transition: background-color 0.3s ease, color 0.3s ease;
 
   text-size-adjust: 100%;
@@ -74,6 +81,6 @@ body {
 }
 
 ::-webkit-scrollbar { width: 2px; height: 8px; }
-::-webkit-scrollbar-track { background: #0a0a0a; }
-::-webkit-scrollbar-thumb { background: #259566; border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: #1e7a53; }
+::-webkit-scrollbar-track { background: var(--background); }
+::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }

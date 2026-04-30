@@ -1,15 +1,13 @@
 import { Link } from "react-router-dom";
-import { Mail, ArrowUpRight, Phone, MessageCircle } from "lucide-react";
+import { Mail, ArrowUpRight, Phone } from "lucide-react";
 import { 
   FaInstagram, 
   FaLinkedinIn, 
   FaYoutube, 
-  FaFacebookF,
   FaWhatsapp 
 } from "react-icons/fa6";
 
 export const Footer = () => {
-  // Services column items
   const services = [
     "Web Applications",
     "Custom Business Website",
@@ -18,7 +16,6 @@ export const Footer = () => {
     "Landing Pages & Portfolios",
   ];
 
-  // Rest of the nav links
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "About Us", href: "/about" },
@@ -30,16 +27,16 @@ export const Footer = () => {
   const socialLinks = [
     { name: "Instagram", icon: FaInstagram, href: "#" },
     { name: "LinkedIn", icon: FaLinkedinIn, href: "#" },
-    { name: "WhatsApp", icon: FaWhatsapp, href: "https://wa.me/91XXXXXXXXXX" }, // Add your number here
+    { name: "WhatsApp", icon: FaWhatsapp, href: "https://wa.me/91XXXXXXXXXX" }, 
     { name: "YouTube", icon: FaYoutube, href: "#" },
   ];
 
   return (
-    <footer className="relative bg-white dark:bg-black text-zinc-500 dark:text-zinc-400 pt-16 pb-6 border-t border-brand/30  dark:border-zinc-900 transition-colors duration-300 overflow-hidden">
+    <footer className="relative bg-black text-zinc-400 pt-16 pb-6 border-t border-zinc-900 transition-colors duration-300 overflow-hidden">
       
       {/* 1. The Big Background Text (Antigravity Style) */}
       <div className="absolute bottom-[-15%] left-0 w-full overflow-hidden pointer-events-none select-none z-0">
-        <h1 className="text-[18vw] font-black text-brand/10 dark:text-brand/5  tracking-tighter leading-none text-center">
+        <h1 className="text-[18vw] font-black text-zinc-900/40 tracking-tighter leading-none text-center">
           VICEVERSA
         </h1>
       </div>
@@ -55,22 +52,22 @@ export const Footer = () => {
                 alt="Logo" 
                 className="w-7 h-7 object-contain" 
               />
-              <h2 className="text-zinc-900 dark:text-white text-lg font-black tracking-tighter uppercase">
+              <h2 className="text-white text-lg font-black tracking-tighter uppercase">
                 VICEVERSA<span className="text-brand">.</span>
               </h2>
             </div>
-            <p className="text-[11px] sm:text-[12px] leading-relaxed max-w-[220px] font-medium opacity-100 dark:opacity-70">
+            <p className="text-[11px] sm:text-[12px] leading-relaxed max-w-[220px] font-medium opacity-70">
               Crafting digital excellence with creativity and precision. 
               Transforming startups from Kerala to the world.
             </p>
             
-            {/* Contact Details (Email & Phone) */}
+            {/* Contact Details */}
             <div className="space-y-2.5">
-              <a href="mailto:theviceversa.in@gmail.com" className="flex items-center gap-2 text-[12px] font-bold text-zinc-900 dark:text-white hover:text-brand transition-all">
+              <a href="mailto:theviceversa.in@gmail.com" className="flex items-center gap-2 text-[12px] font-bold text-white hover:text-brand transition-all">
                 <Mail size={14} className="text-brand" />
                 theviceversa.in@gmail.com
               </a>
-              <a href="tel:+91XXXXXXXXXX" className="flex items-center gap-2 text-[12px] font-bold text-zinc-900 dark:text-white hover:text-brand transition-all">
+              <a href="tel:+91XXXXXXXXXX" className="flex items-center gap-2 text-[12px] font-bold text-white hover:text-brand transition-all">
                 <Phone size={14} className="text-brand" />
                 +91 XXXXX XXXXX
               </a>
@@ -80,10 +77,10 @@ export const Footer = () => {
           {/* 2. Services Column */}
           <div className="lg:flex lg:justify-center">
             <div className="space-y-5">
-              <h3 className="text-zinc-900 dark:text-white text-[10px] font-black uppercase tracking-[0.2em]">Services</h3>
+              <h3 className="text-white text-[10px] font-black uppercase tracking-[0.2em]">Services</h3>
               <ul className="space-y-3">
                 {services.map((service) => (
-                  <li key={service} className="text-[12px] font-medium opacity-100 dark:opacity-70  hover:text-brand cursor-default transition-all">
+                  <li key={service} className="text-[12px] font-medium opacity-70 hover:text-brand cursor-default transition-all">
                     {service}
                   </li>
                 ))}
@@ -94,7 +91,7 @@ export const Footer = () => {
           {/* 3. Navigation Column */}
           <div className="lg:flex lg:justify-center">
             <div className="space-y-5">
-              <h3 className="text-zinc-900 dark:text-white text-[10px] font-black uppercase tracking-[0.2em]">Explore</h3>
+              <h3 className="text-white text-[10px] font-black uppercase tracking-[0.2em]">Explore</h3>
               <ul className="space-y-3">
                 {navLinks.map((link) => (
                   <li key={link.name}>
@@ -110,7 +107,7 @@ export const Footer = () => {
 
           {/* 4. Social Presence */}
           <div className="lg:text-right space-y-6">
-            <h3 className="text-zinc-900 dark:text-white text-[10px] font-black uppercase tracking-[0.2em]">Connect with Us</h3>
+            <h3 className="text-white text-[10px] font-black uppercase tracking-[0.2em]">Connect with Us</h3>
             <div className="flex gap-2 lg:justify-end">
               {socialLinks.map((social) => (
                 <a
@@ -118,25 +115,24 @@ export const Footer = () => {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 flex items-center justify-center bg-brand/10  dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-full hover:border-brand hover:text-brand transition-all group"
+                  className="w-9 h-9 flex items-center justify-center bg-zinc-900 border border-zinc-800 rounded-full hover:border-brand hover:text-brand transition-all group"
                   title={social.name}
                 >
                   <social.icon size={14} className="group-hover:scale-110 transition-transform" />
                 </a>
               ))}
             </div>
-            <p className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 italic">
+            <p className="text-[10px] font-bold text-zinc-500 italic">
               "Let's build something <br className="hidden lg:block" /> exceptional together."
             </p>
           </div>
         </div>
 
         {/* Bottom Line */}
-        <div className="mt-16 pt-6 border-t border-zinc-100 dark:border-zinc-900/50 flex flex-col md:flex-row justify-between items-center gap-4 text-[9px] font-black tracking-widest text-zinc-500 dark:text-zinc-400 uppercase">
-          <div className="opacity-100 dark:opacity-60">© {new Date().getFullYear()} VICEVERSA All Rights Reserved</div>
-          <div className="flex items-center gap-4 ">
+        <div className="mt-16 pt-6 border-t border-zinc-900/50 flex flex-col md:flex-row justify-between items-center gap-4 text-[9px] font-black tracking-widest text-zinc-500 uppercase">
+          <div className="opacity-60">© {new Date().getFullYear()} VICEVERSA All Rights Reserved</div>
+          <div className="flex items-center gap-4">
              <span className="flex items-center gap-1.5"><div className="w-1 h-1 bg-brand rounded-full animate-pulse"></div> Team Viceversa </span>
-            
           </div>
         </div>
       </div>

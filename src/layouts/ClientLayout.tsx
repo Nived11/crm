@@ -6,7 +6,7 @@ import { Toaster } from '@/components/ui/Toaster';
 
 const ClientLayout: React.FC = () => {
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col font-sans selection:bg-brand/30">
+    <div className="min-h-screen bg-white text-zinc-900 flex flex-col font-sans selection:bg-brand/30">
       <Navbar />
       
       {/* Main Content using Outlet for nested routes */}

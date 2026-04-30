@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useClients } from "../hooks/useClients";
 import { 
   Plus, Search, Edit3, Trash2, User, X, Phone, 
   MapPin, CheckCircle2, Calendar, ArrowLeft, Building2, 
-  MoreVertical, Inbox, Clock, AlertCircle
+  MoreVertical, Inbox, AlertCircle
 } from "lucide-react";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { ErrorMessage } from "@/components/ErrorMessage";
@@ -15,6 +15,7 @@ const ClientManager = () => {
     clients, categories, loading, isError, errorMessage, setSearch, setCategoryFilter,
     page, setPage, totalPages, hasNext, hasPrevious,
     deleteMutation, createMutation, updateMutation, createCategoryMutation, refetch,
+    checkPhoneExists // Imported the new checking function
   } = useClients();
 
   const [isClientModalOpen, setIsClientModalOpen] = useState(false);
@@ -24,6 +25,7 @@ const ClientManager = () => {
   const [activeMobileMenu, setActiveMobileMenu] = useState<string | null>(null);
   const [searchValue, setSearchValue] = useState("");
   const [formError, setFormError] = useState(""); 
+  const [isCheckingPhone, setIsCheckingPhone] = useState(false); // Loading state for phone check
 
   const [selectedClient, setSelectedClient] = useState<any>(null);
   const [categoryName, setCategoryName] = useState("");
@@ -81,7 +83,6 @@ const ClientManager = () => {
       setIsCategoryModalOpen(true);
     } else if (type === 'status') {
       setSelectedClient(data);
-      // Removed "Pending" check and set default to Interested
       setStatusForm({ 
         status: data.status && data.status !== "Pending" ? data.status : "Interested", 
         remarks: data.remarks || "" 
@@ -111,10 +112,29 @@ const ClientManager = () => {
     setTimeout(scrollToTop, 100);
   };
 
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhoneChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "").slice(0, 10);
     setClientForm({ ...clientForm, phone_number: value });
-    if (value.length === 10) setFormError(""); 
+    
+    if (value.length === 10) {
+      // If editing existing client and number hasn't changed, ignore check
+      if (selectedClient && selectedClient.phone_number === value) {
+        setFormError("");
+        return;
+      }
+      
+      setIsCheckingPhone(true);
+      const exists = await checkPhoneExists(value);
+      setIsCheckingPhone(false);
+      
+      if (exists) {
+        setFormError("Phone number already exists!");
+      } else {
+        setFormError(""); 
+      }
+    } else {
+      setFormError(""); 
+    }
   };
 
   const handleAddClient = async (e: React.FormEvent) => {
@@ -123,6 +143,8 @@ const ClientManager = () => {
       setFormError("Please enter a valid 10-digit phone number");
       return;
     }
+    if (formError || isCheckingPhone) return;
+
     if (selectedClient) {
       await updateMutation.mutateAsync({ id: selectedClient.id, formData: clientForm });
     } else {
@@ -404,8 +426,16 @@ const ClientManager = () => {
       {isClientModalOpen && (
         <div 
           onClick={closeAllModals}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black md:bg-black/90 md:backdrop-blur-md"
+          className="fixed inset-0 z-[100] flex flex-col items-center justify-center p-4 bg-black md:bg-black/90 md:backdrop-blur-md"
         >
+          {/* Top Floating Error Matching User Image */}
+          {formError === "Already this phone number exists in the database!" && (
+            <div className="bg-white text-black px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 z-[110] mb-4 w-full md:w-auto md:min-w-[400px] animate-in fade-in slide-in-from-bottom-4 duration-300">
+              <div className="w-5 h-5 bg-black rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold text-xs">!</div>
+              <p className="text-sm font-semibold">{formError}</p>
+            </div>
+          )}
+
           <div 
             onClick={(e) => e.stopPropagation()}
             className="bg-[#0c0c0c] w-full h-full md:h-auto md:max-w-2xl md:rounded-2xl md:border md:border-zinc-800 overflow-y-auto shadow-2xl animate-in fade-in zoom-in-95 duration-200"
@@ -451,7 +481,8 @@ const ClientManager = () => {
                         placeholder="Enter 10-digit number" 
                     />
                   </div>
-                  {formError && (
+                  {/* Standard error for format issues (hidden if the floating exists popup is shown) */}
+                  {formError && formError !== "Already this phone number exists in the database!" && (
                     <p className="text-red-500 text-[10px] font-bold flex items-center gap-1 mt-1 ml-1 animate-in slide-in-from-top-1">
                       <AlertCircle size={12}/> {formError}
                     </p>
@@ -479,10 +510,12 @@ const ClientManager = () => {
               <div className="pt-4">
                 <button 
                     type="submit" 
-                    disabled={createMutation.isPending || updateMutation.isPending}
+                    disabled={createMutation.isPending || updateMutation.isPending || isCheckingPhone || !!formError}
                     className="cursor-pointer w-full bg-brand text-white py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-lg shadow-brand/20 active:scale-[0.98] transition-all disabled:opacity-70"
                 >
-                  {selectedClient 
+                  {isCheckingPhone 
+                    ? "Checking Number..." 
+                    : selectedClient 
                     ? (updateMutation.isPending ? "Updating Lead..." : "Update Information") 
                     : (createMutation.isPending ? "Registering Lead..." : "Register Lead")}
                 </button>
@@ -511,7 +544,6 @@ const ClientManager = () => {
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Response</label>
                 <select required className="w-full bg-zinc-900/30 border border-zinc-800 p-4 rounded-2xl text-sm text-white outline-none focus:border-brand/40" value={statusForm.status} onChange={(e) => setStatusForm({...statusForm, status: e.target.value})}>
-                  {/* "Pending" option removed from here */}
                   <option value="Interested" className="bg-zinc-950">Interested</option>
                   <option value="Not Interested" className="bg-zinc-950">Not Interested</option>
                   <option value="Busy" className="bg-zinc-950">Busy / Call Later</option>

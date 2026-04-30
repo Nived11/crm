@@ -1,10 +1,8 @@
 import { Link } from "react-router-dom";
-import { useTheme } from "../theme-provider";
-import { Moon, Sun, Home, Briefcase, Info, Mail, LayoutGrid, Terminal } from "lucide-react";
+import { Home, Briefcase, Info, Mail, LayoutGrid, Terminal } from "lucide-react";
 import { motion } from "framer-motion";
 
 export const Navbar = () => {
-  const { theme, setTheme } = useTheme();
 
   const leftLinks = [
     { name: "Home", href: "/", icon: Home },
@@ -24,16 +22,16 @@ export const Navbar = () => {
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="fixed top-0 w-full z-50 flex justify-between items-center px-6 py-5 md:px-12 pointer-events-none"
+        className="fixed top-6 w-full z-50 flex justify-between items-center px-6 py-5 md:px-12 pointer-events-none"
       >
         {/* Placeholder to balance the flex-between alongside the right theme toggle */}
         <div className="w-10"></div> 
 
         {/* --- CENTER PILL --- */}
         <div className="absolute left-1/2 -translate-x-1/2 pointer-events-auto">
-          <div className="hidden md:flex items-center gap-1 bg-white/70 dark:bg-zinc-900/60 backdrop-blur-xl border border-zinc-200/50 dark:border-zinc-800/50 px-6 py-2 rounded-full shadow-2xl transition-all duration-500">
+          <div className="hidden md:flex items-center gap-1 bg-white/80 backdrop-blur-xl border border-zinc-200/50 px-6 py-2 rounded-full shadow-lg shadow-zinc-200/50 transition-all duration-500">
             {leftLinks.map((link) => (
-              <Link key={link.name} to={link.href} className="px-4 py-2 text-[11px] uppercase font-bold text-zinc-900 dark:text-zinc-300 hover:text-brand transition-all  tracking-wider">
+              <Link key={link.name} to={link.href} className="px-4 py-2 text-[11px] uppercase font-bold text-zinc-900 hover:text-brand transition-all  tracking-wider">
                 {link.name}
               </Link>
             ))}
@@ -46,14 +44,14 @@ export const Navbar = () => {
             </div>
 
             {rightLinks.map((link) => (
-              <Link key={link.name} to={link.href} className="px-4 py-2 text-[11px] uppercase font-bold text-zinc-900 dark:text-zinc-300 hover:text-brand transition-all  tracking-wider">
+              <Link key={link.name} to={link.href} className="px-4 py-2 text-[11px] uppercase font-bold text-zinc-900 hover:text-brand transition-all  tracking-wider">
                 {link.name}
               </Link>
             ))}
           </div>
 
           {/* Mobile Top Branding */}
-          <div className="flex md:hidden flex-col    items-center justify-center bg-white/70 dark:bg-zinc-900/60 backdrop-blur-xl border border-zinc-200/50 dark:border-zinc-800/50 px-2 py-0.5  rounded-full shadow-xl min-w-[120px]">
+          <div className="flex md:hidden flex-col    items-center justify-center bg-white/80 backdrop-blur-xl border border-zinc-200/50 px-2 py-0.5  rounded-full shadow-lg shadow-zinc-200/50 min-w-[120px]">
             <Link to="/">
               <img src="/viceversalogo.png" alt="Logo" className="w-9 h-9 object-contain active:scale-95 transition-transform" />
             </Link>
@@ -61,15 +59,7 @@ export const Navbar = () => {
           </div>
         </div>
 
-        {/* --- SIMPLE THEME TOGGLE --- */}
-        <div className="pointer-events-auto">
-          <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="cursor-pointer p-3 rounded-full bg-white/70 dark:bg-zinc-900/60 backdrop-blur-xl text-zinc-900 dark:text-zinc-300 hover:text-brand transition-all border border-zinc-200/50 dark:border-zinc-800/50 shadow-xl"
-          >
-            {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
-        </div>
+        {/* --- THEME TOGGLE REMOVED --- */}
       </motion.nav>
 
       {/* Mobile Bottom Nav */}

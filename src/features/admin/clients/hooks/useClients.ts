@@ -32,6 +32,19 @@ export function useClients() {
     },
   });
 
+  // Real-time Check for Phone Number
+  const checkPhoneExists = async (phone: string) => {
+    try {
+      const response = await api.get(`/clients/list-create/?search=${phone}`);
+      const clientsList = response.data?.results || [];
+      // Ensuring it's an exact match from the search results
+      return clientsList.some((c: any) => c.phone_number === phone);
+    } catch (err) {
+      console.error("Phone check failed", err);
+      return false;
+    }
+  };
+
   const createCategoryMutation = useMutation({
     mutationFn: async (name: string) => api.post('/clients/categories/', { name }),
     onSuccess: () => {
@@ -52,7 +65,7 @@ export function useClients() {
 
   const updateMutation = useMutation({
     mutationFn: async ({ id, formData }: { id: number; formData: any }) =>
-      api.patch(`/clients/detail/${id}/`, formData), // FIXED URL
+      api.patch(`/clients/detail/${id}/`, formData),
     onSuccess: () => {
       toast.success('Client updated!');
       queryClient.invalidateQueries({ queryKey: ['clients'] });
@@ -83,6 +96,7 @@ export function useClients() {
     setSearch: (val: string) => { setSearch(val); setPage(1); },
     setCategoryFilter,
     refetch,
+    checkPhoneExists, // Exported new function
     createCategoryMutation,
     createMutation,
     updateMutation,
