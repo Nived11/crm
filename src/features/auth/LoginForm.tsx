@@ -15,8 +15,8 @@ export function LoginForm() {
       <div className="hidden lg:flex lg:w-[50%] p-16 flex-col justify-between bg-[#0a0a0a] border-r border-zinc-900 relative">
         <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#259566_1px,transparent_1px)] [background-size:32px_32px]"></div>
         <div className="flex items-center gap-2 relative z-10">
-          <img src="/viceversalogo.png" alt="Logo" className="w-10 h-10 object-contain drop-shadow-md" />
-          <span className="text-xl font-black tracking-tighter text-white uppercase">VICEVERSA</span>
+          <img src="" alt="Logo" className="w-10 h-10 object-contain drop-shadow-md" />
+          <span className="text-xl font-black tracking-tighter text-white uppercase">COSMOS</span>
         </div>
         <div className="relative z-10">
           <h2 className="text-5xl xl:text-6xl font-bold text-white leading-tight mb-6 tracking-tighter">

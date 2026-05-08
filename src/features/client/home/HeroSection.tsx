@@ -72,7 +72,6 @@ const HeroSection = () => {
   initial={{ opacity: 0, x: -50 }}
   animate={{ opacity: 1, x: 0 }}
   transition={{ duration: 0.8, ease: "easeOut" }}
-  // മൊബൈലിൽ ടെക്സ്റ്റ് സെന്റർ ആക്കാൻ 'text-center' ഉം വലിയ സ്ക്രീനിൽ 'lg:text-left' ഉം ചേർത്തു
   className="text-center lg:text-left order-1 lg:order-1 lg:-ml-12"
 >
   <h1 className="text-4xl sm:text-4xl xl:text-[68px] font-black text-zinc-900 leading-[0.9] tracking-tighter">
@@ -83,15 +82,13 @@ const HeroSection = () => {
   <p className="mt-6 text-zinc-900 sm:mt-10 text-[15px] sm:text-[15px]  font-medium leading-relaxed max-w-lg mx-auto lg:mx-0">
     We bridge the gap between abstract ideas and powerful digital products. 
     <br className="hidden sm:block" />
-    <span className="text-zinc-900 font-bold font-mono">ViceVersa</span> crafts high-end solutions where every pixel serves a purpose.
+    <span className="text-zinc-900 font-bold font-mono">Athena</span> crafts high-end solutions where every pixel serves a purpose.
   </p>
 
-  {/* Buttons Area - മൊബൈലിൽ ഒരേ ലൈനിൽ വരാൻ flex-row ഉം justify-center ഉം നൽകി */}
   <div className="mt-12 flex flex-row items-center justify-center lg:justify-start gap-4 sm:gap-8">
     <motion.button 
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      // w-full മാറ്റി w-auto ആക്കി, അപ്പോൾ ബട്ടൺ ഒരേ ലൈനിൽ ഒതുങ്ങി നിൽക്കും
       className="bg-[image:var(--brand-gradient)] text-white px-5 sm:px-10 py-3 rounded-full font-bold text-sm sm:text-base shadow-lg shadow-brand/20 transition-all w-auto"
     >
       Let's Build It

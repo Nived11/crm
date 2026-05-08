@@ -37,7 +37,7 @@ export const Footer = () => {
       {/* 1. The Big Background Text (Antigravity Style) */}
       <div className="absolute bottom-[-15%] left-0 w-full overflow-hidden pointer-events-none select-none z-0">
         <h1 className="text-[18vw] font-black text-zinc-900/40 tracking-tighter leading-none text-center">
-          VICEVERSA
+          APP NAME  
         </h1>
       </div>
 
@@ -48,12 +48,12 @@ export const Footer = () => {
           <div className="space-y-5">
             <div className="flex items-center gap-2">
               <img 
-                src="/viceversalogo.png" 
+                src="" 
                 alt="Logo" 
                 className="w-7 h-7 object-contain" 
               />
               <h2 className="text-white text-lg font-black tracking-tighter uppercase">
-                VICEVERSA<span className="text-brand">.</span>
+                Gestor de Proyectos<span className="text-brand">.</span>
               </h2>
             </div>
             <p className="text-[11px] sm:text-[12px] leading-relaxed max-w-[220px] font-medium opacity-70">
@@ -63,9 +63,9 @@ export const Footer = () => {
             
             {/* Contact Details */}
             <div className="space-y-2.5">
-              <a href="mailto:theviceversa.in@gmail.com" className="flex items-center gap-2 text-[12px] font-bold text-white hover:text-brand transition-all">
+              <a href="mailto:gestordeproyectos.in@gmail.com" className="flex items-center gap-2 text-[12px] font-bold text-white hover:text-brand transition-all">
                 <Mail size={14} className="text-brand" />
-                theviceversa.in@gmail.com
+                gestordeproyectos.in@gmail.com
               </a>
               <a href="tel:+91XXXXXXXXXX" className="flex items-center gap-2 text-[12px] font-bold text-white hover:text-brand transition-all">
                 <Phone size={14} className="text-brand" />
@@ -130,9 +130,9 @@ export const Footer = () => {
 
         {/* Bottom Line */}
         <div className="mt-16 pt-6 border-t border-zinc-900/50 flex flex-col md:flex-row justify-between items-center gap-4 text-[9px] font-black tracking-widest text-zinc-500 uppercase">
-          <div className="opacity-60">© {new Date().getFullYear()} VICEVERSA All Rights Reserved</div>
+          <div className="opacity-60">© {new Date().getFullYear()} Gestor de Proyectos. All Rights Reserved</div>
           <div className="flex items-center gap-4">
-             <span className="flex items-center gap-1.5"><div className="w-1 h-1 bg-brand rounded-full animate-pulse"></div> Team Viceversa </span>
+             <span className="flex items-center gap-1.5"><div className="w-1 h-1 bg-brand rounded-full animate-pulse"></div> Team Brandname </span>
           </div>
         </div>
       </div>

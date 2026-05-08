@@ -4,15 +4,6 @@ import AdminLayout from '../layouts/AdminLayout';
 import LoginPage from '@/pages/admin/LoginPage';
 import { useAuthStore } from '@/store/authStore';
 
-// Client Pages
-import HomePage from '@/pages/client/HomePage';
-import AboutPage from '@/pages/client/AboutPage';
-import ServicesPage from '@/pages/client/ServicesPage';
-import ProjectsPage from '@/pages/client/ProjectsPage';
-import CareersPage from '@/pages/client/CareersPage';
-import ContactPage from '@/pages/client/ContactPage';
-import NotFoundPage from '@/pages/client/NotFoundPage';
-
 // Admin Pages
 import DashboardPage from '@/pages/admin/DashboardPage';
 import AdminProjectsPage from '@/pages/admin/AdminProjectsPage';
@@ -20,19 +11,31 @@ import AdminClientsPage from '@/pages/admin/AdminClientsPage';
 import AdminStatusTrackerPage from '@/pages/admin/AdminStatusTrackerPage';
 import AdminMessagesPage from '@/pages/admin/AdminMessagesPage';
 
+// Simple Coming Soon Component (You can move this to a separate file later)
+const ComingSoon = () => (
+  <div className="flex h-screen items-center justify-center bg-gray-50 text-center px-4">
+    <div>
+      <h1 className="text-4xl font-bold text-gray-900 mb-2">Coming Soon</h1>
+      <p className="text-gray-600">We are currently building our CRM platform. Stay tuned!</p>
+    </div>
+  </div>
+);
+
 export default function AppRouter() {
   const isAuthenticated = useAuthStore(state => state.isAuthenticated);
 
   return (
     <Routes>
-      {/* Client Application Routes */}
+      {/* Client Application Routes - Hidden for now */}
       <Route path="/" element={<ClientLayout />}>
-        <Route index element={<HomePage />} /> 
+        <Route index element={<ComingSoon />} />
+        {/* 
         <Route path="about" element={<AboutPage />} />
         <Route path="services" element={<ServicesPage />} />
         <Route path="projects" element={<ProjectsPage />} />
         <Route path="careers" element={<CareersPage />} />
-        <Route path="contact" element={<ContactPage />} />
+        <Route path="contact" element={<ContactPage />} /> 
+        */}
       </Route>
 
       {/* Auth Routes */}
@@ -50,7 +53,7 @@ export default function AppRouter() {
         <Route path="messages" element={<AdminMessagesPage />} />
       </Route>
       
-      <Route path="*" element={<NotFoundPage />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
