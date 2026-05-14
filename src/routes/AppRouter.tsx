@@ -15,8 +15,8 @@ import AdminMessagesPage from '@/pages/admin/AdminMessagesPage';
 const ComingSoon = () => (
   <div className="flex h-screen items-center justify-center bg-gray-50 text-center px-4">
     <div>
-      <h1 className="text-4xl font-bold text-gray-900 mb-2">Coming Soon</h1>
-      <p className="text-gray-600">We are currently building our CRM platform. Stay tuned!</p>
+      <h1 className="text-4xl font-bold text-gray-900 mb-2">Business Website </h1>
+      <p className="text-gray-600">Under Construction </p>
     </div>
   </div>
 );
