@@ -283,13 +283,13 @@ const ClientManager = () => {
           ) : (
             <>
               <div className="hidden md:block overflow-x-auto">
-                <table className="w-full text-left border-collapse">
+                <table className="w-full text-left  border-collapse">
                   <thead>
                     <tr className="border-b border-zinc-900 bg-zinc-900/20">
                       <th className="p-6 text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]">No</th>
-                      <th className="p-6 text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]">Company</th>
+                      <th className="p-6 text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]">Company Name</th>
                       <th className="p-6 text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]">Owner Name</th>
-                      <th className="p-6 text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]">Contact</th>
+                      <th className="p-6 text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]">Contact No</th>
                       <th className="p-6 text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]">Location</th>
                       <th className="p-6 text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]">Status</th>
                       <th className="p-6 text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] text-right">Actions</th>

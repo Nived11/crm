@@ -10,8 +10,8 @@ import AdminProjectsPage from '@/pages/admin/AdminProjectsPage';
 import AdminClientsPage from '@/pages/admin/AdminClientsPage';
 import AdminStatusTrackerPage from '@/pages/admin/AdminStatusTrackerPage';
 import AdminMessagesPage from '@/pages/admin/AdminMessagesPage';
+import AdminRecyclebinPage from '@/pages/admin/AdminRecyclebinPage';
 
-// Simple Coming Soon Component (You can move this to a separate file later)
 const ComingSoon = () => (
   <div className="flex h-screen items-center justify-center bg-gray-50 text-center px-4">
     <div>
@@ -29,17 +29,13 @@ export default function AppRouter() {
       {/* Client Application Routes - Hidden for now */}
       <Route path="/" element={<ClientLayout />}>
         <Route index element={<ComingSoon />} />
-        {/* 
-        <Route path="about" element={<AboutPage />} />
-        <Route path="services" element={<ServicesPage />} />
-        <Route path="projects" element={<ProjectsPage />} />
-        <Route path="careers" element={<CareersPage />} />
-        <Route path="contact" element={<ContactPage />} /> 
-        */}
       </Route>
 
-      {/* Auth Routes */}
-      <Route path="/login" element={<LoginPage />} />
+      {/* Auth Routes (Protected from already logged-in users) */}
+      <Route 
+        path="/login" 
+        element={isAuthenticated ? <Navigate to="/admin" replace /> : <LoginPage />} 
+      />
 
       {/* Admin Application Routes (Protected) */}
       <Route 
@@ -51,6 +47,7 @@ export default function AppRouter() {
         <Route path="clients" element={<AdminClientsPage />} />
         <Route path="status-tracker" element={<AdminStatusTrackerPage />} />
         <Route path="messages" element={<AdminMessagesPage />} />
+        <Route path="recycle-bin" element={<AdminRecyclebinPage />} /> 
       </Route>
       
       <Route path="*" element={<Navigate to="/" replace />} />

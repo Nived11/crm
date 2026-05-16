@@ -38,9 +38,9 @@ export const Navbar = () => {
 
             <div className="px-4 mx-2 flex flex-col items-center justify-center min-w-[80px]">
               <Link to="/">
-                {/* <img src="" alt="Logo" className="w-12 h-8 object-contain hover:scale-110 transition-transform" /> */}
+                <img src="crm.png" alt="Logo" className="w-10 h-10 object-contain hover:scale-110 transition-transform" />
               </Link>
-              <div className="text-[10px] font-black tracking-[0.2em] text-brand uppercase -mt-1">App name</div>
+              {/* <div className="text-[10px] font-black tracking-[0.2em] text-brand uppercase -mt-1"></div> */}
             </div>
 
             {rightLinks.map((link) => (
@@ -53,9 +53,9 @@ export const Navbar = () => {
           {/* Mobile Top Branding */}
           <div className="flex md:hidden flex-col    items-center justify-center bg-white/80 backdrop-blur-xl border border-zinc-200/50 px-2 py-0.5  rounded-full shadow-lg shadow-zinc-200/50 min-w-[120px]">
             <Link to="/">
-              {/* <img src="" alt="Logo" className="w-9 h-9 object-contain active:scale-95 transition-transform" /> */}
+              <img src="crm.png" alt="Logo" className="w-9 h-9 object-contain active:scale-95 transition-transform" />
             </Link>
-            <div className="text-[8px] font-black tracking-[0.2em] text-brand uppercase mt-1">App name</div>
+            {/* <div className="text-[8px] font-black tracking-[0.2em] text-brand uppercase mt-1">App name</div> */}
           </div>
         </div>
 

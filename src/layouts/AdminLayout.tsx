@@ -12,7 +12,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Menu,
-  X
+  X,
+  Trash2
 } from "lucide-react";
 
 export default function AdminLayout() {
@@ -72,6 +73,13 @@ export default function AdminLayout() {
       icon: MessageSquare,
       desc: "Check your latest inquiries and conversations."
     },
+    {
+      name: "Recycle Bin",
+      header: "Recycle Bin",
+      href: "/admin/recycle-bin",
+      icon: Trash2,
+      desc: "Restore deleted projects and clients."
+    },
     
   ];
 
@@ -88,8 +96,8 @@ export default function AdminLayout() {
       {/* Mobile Top Bar */}
       <div className="lg:hidden fixed top-0 w-full h-16 bg-zinc-950 border-b border-zinc-800 flex items-center justify-between px-4 z-50">
         <div className="flex items-center gap-2">
-          <img src="" alt="Logo" className="w-8 h-8" />
-          <div className="border-b border-brand/30 text-xs font-bold">App Name</div>
+          <img src="crm.png" alt="Logo" className="w-8 h-8" />
+          <div className="border-b border-brand/30 text-xs font-bold">COSMOS</div>
         </div>
         <button onClick={() => setIsMobileOpen(!isMobileOpen)} className="p-2 text-zinc-400">
           {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
@@ -119,9 +127,9 @@ export default function AdminLayout() {
 
         <div className="h-20 flex items-center px-6 border-b border-zinc-900">
           <div className="flex items-center gap-3 justify-center">
-            <img src="" alt="Logo" className="w-10 h-10" />
+            <img src="crm.png" alt="Logo" className="w-10 h-10" />
             <span className={`text-md font-semibold border-b border-brand/30 tracking-tight text-white transition-opacity duration-200 ${isCollapsed ? "lg:hidden" : ""}`}>
-              App Name
+              COSMOS <span className="text-brand font-bold tracking-tight">.</span>
             </span>
           </div>
         </div>
