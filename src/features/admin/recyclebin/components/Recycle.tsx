@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useRecycle } from "../hooks/useRecycle";
 import { 
   Search, RefreshCw, Inbox, User, MapPin, 
-  Building2, Tag, Phone, Clock 
+  Building2, Tag, Phone, Clock, AlertCircle
 } from "lucide-react";
 import { ErrorMessage } from "@/components/ErrorMessage";
 import { Pagination } from "@/components/Pagination";
@@ -33,14 +33,22 @@ const Recycle = () => {
   } = useRecycle();
 
   const [searchValue, setSearchValue] = useState("");
+  const [clientToRestore, setClientToRestore] = useState<number | null>(null);
 
-  const handleRestoreClick = async (e: React.MouseEvent, id: number) => {
+  const handleRestoreClick = (e: React.MouseEvent, id: number) => {
     e.stopPropagation();
-    await restoreMutation.mutateAsync(id);
+    setClientToRestore(id); // പോപ്പ്-അപ്പ് കാണിക്കാൻ ഐഡി സ്റ്റേറ്റിലേക്ക് മാറ്റുന്നു
+  };
+
+  const handleConfirmRestore = async () => {
+    if (clientToRestore !== null) {
+      await restoreMutation.mutateAsync(clientToRestore);
+      setClientToRestore(null); // റീസ്റ്റോർ ആയതിന് ശേഷം പോപ്പ്-അപ്പ് ക്ലോസ് ചെയ്യുന്നു
+    }
   };
 
   return (
-    <div className="bg-black min-h-screen pb-10">
+    <div className="bg-black min-h-screen pb-10 relative">
       <div className="max-w-7xl mx-auto px-0">
         
         {/* Header Title & Search */}
@@ -165,7 +173,7 @@ const Recycle = () => {
                               className="flex items-center gap-2 px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-[10px] font-black text-zinc-400 hover:text-white hover:border-zinc-600 transition-all active:scale-95 disabled:opacity-50"
                             >
                               <RefreshCw size={12} className={restoreMutation.isPending ? "animate-spin" : ""} />
-                              Restore Lead
+                              Restore
                             </button>
                           </div>
                         </td>
@@ -248,6 +256,44 @@ const Recycle = () => {
           <Pagination currentPage={page} totalPages={totalPages} hasNext={hasNext} hasPrevious={hasPrevious} onPageChange={setPage} isLoading={loading} />
         </div>
       </div>
+
+      {/* CONFIRMATION MODAL POPUP (Cosmos Premium Theme-ൽ സെറ്റ് ചെയ്തത്) */}
+      {clientToRestore !== null && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+          <div className="w-full max-w-sm bg-[#0a0a0a] border border-zinc-900 rounded-2xl p-6 shadow-2xl relative">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+                <AlertCircle size={16} />
+              </div>
+              <h3 className="text-sm font-bold text-white tracking-tight uppercase">Confirm Restore</h3>
+            </div>
+            
+            <p className="text-zinc-500 text-xs leading-relaxed mb-6">
+              Are you sure you want to restore this lead? It will be moved back to your active clients panel instantly.
+            </p>
+            
+            <div className="flex items-center justify-end gap-2.5">
+              <button
+                onClick={() => setClientToRestore(null)}
+                className="px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-[10px] font-black uppercase tracking-wider text-zinc-400 hover:text-white hover:border-zinc-700 transition-all active:scale-95"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmRestore}
+                disabled={restoreMutation.isPending}
+                className="flex items-center gap-1.5 px-4 py-2 bg-white text-black rounded-xl text-[10px] font-black uppercase tracking-wider hover:bg-zinc-200 transition-all active:scale-95 disabled:opacity-50"
+              >
+                {restoreMutation.isPending ? (
+                  <RefreshCw size={12} className="animate-spin" />
+                ) : (
+                  "Yes, Restore"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
