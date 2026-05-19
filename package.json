@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && echo \"/api/* $BACKEND_API_URL/:splat 200\" > dist/_redirects && echo \"/* /index.html 200\" >> dist/_redirects",
     "preview": "vite preview",
     "lint": "eslint"
   },
